@@ -14,6 +14,10 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/master' }}
+
 env:
   packages: >
     mesa-common-dev
@@ -31,12 +35,12 @@ jobs:
     runs-on: windows-2019
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: pioneer
 
     - name: Checkout pioneer-thirdparty
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: pioneerspacesim/pioneer-thirdparty
         path: pioneer-thirdparty
@@ -52,12 +56,12 @@ jobs:
     runs-on: windows-2019
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: pioneer
 
     - name: Checkout pioneer-thirdparty
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: pioneerspacesim/pioneer-thirdparty
         path: pioneer-thirdparty
@@ -88,7 +92,7 @@ jobs:
         cmake --build . --target win-installer
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: Windows-Artifacts
         path: pioneer/pioneer-*-win.exe
@@ -106,7 +110,7 @@ jobs:
 
     steps:
     # Checkout the repository as $GITHUB_WORKSPACE
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install Dependencies
       run: |
@@ -126,7 +130,7 @@ jobs:
       run: ./scripts/build-travis.sh
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: Linux-Artifacts
         path: release/zip/*.tar.gz
@@ -146,7 +150,7 @@ jobs:
     steps:
 
     # Checkout the repository as $GITHUB_WORKSPACE
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install Dependencies
       run: |
